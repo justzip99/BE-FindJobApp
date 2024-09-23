@@ -28,9 +28,6 @@ let UsersService = class UsersService {
     updateUser(id, updateUserDetails) {
         return this.userRepository.update({ id }, { ...updateUserDetails });
     }
-    async findUsers() {
-        return this.userRepository.find();
-    }
     async findOneUser(email) {
         return this.userRepository.findOne({ where: { email } });
     }

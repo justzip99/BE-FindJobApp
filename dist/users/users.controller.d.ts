@@ -1,15 +1,21 @@
-import { AuthenticateUser } from './dto/request/authuser.dto';
 import { UsersService } from './users.service';
 import { updateUser } from './dto/request/updateUser.dto';
-import { JwtService } from '@nestjs/jwt';
-import { Response, Request } from 'express';
+import { Signup } from './dto/request/signup.dto';
+import { LoginUser } from './dto/request/loginuser.dto';
+import { AuthService } from './auth.service';
 export declare class UsersController {
-    private readonly usersService;
-    private jwtService;
-    constructor(usersService: UsersService, jwtService: JwtService);
-    RegisterUser(AuthuserDto: AuthenticateUser): Promise<import("./users.entity").User>;
-    LoginUser(authuserDto: AuthenticateUser, response: Response): Promise<import("./users.entity").User>;
+    private usersService;
+    private authService;
+    constructor(usersService: UsersService, authService: AuthService);
+    RegistingUser(AuthuserDto: Signup): Promise<{
+        msg: string;
+        access_token: string;
+    }>;
+    LoginUser(authuserDto: LoginUser): Promise<{
+        msg: string;
+        access_token: string;
+    }>;
     updateUserById(id: number, updateUserDetails: updateUser): Promise<import("typeorm").UpdateResult>;
     deleteUserById(id: string): Promise<import("typeorm").DeleteResult>;
-    getAllUsersDetails(request: Request): Promise<import("./users.entity").User[]>;
+    getUserDetails(email: string): Promise<import("./users.entity").User>;
 }

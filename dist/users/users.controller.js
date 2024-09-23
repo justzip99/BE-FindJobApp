@@ -14,31 +14,21 @@ var __param = (this && this.__param) || function (paramIndex, decorator) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.UsersController = void 0;
 const common_1 = require("@nestjs/common");
-const authuser_dto_1 = require("./dto/request/authuser.dto");
 const users_service_1 = require("./users.service");
 const updateUser_dto_1 = require("./dto/request/updateUser.dto");
-const bcrypt = require("bcrypt");
-const jwt_1 = require("@nestjs/jwt");
+const signup_dto_1 = require("./dto/request/signup.dto");
+const loginuser_dto_1 = require("./dto/request/loginuser.dto");
+const auth_service_1 = require("./auth.service");
 let UsersController = class UsersController {
-    constructor(usersService, jwtService) {
+    constructor(usersService, authService) {
         this.usersService = usersService;
-        this.jwtService = jwtService;
+        this.authService = authService;
     }
-    async RegisterUser(AuthuserDto) {
-        AuthuserDto.password = await bcrypt.hash(AuthuserDto.password, 10);
-        return this.usersService.createUser(AuthuserDto);
+    async RegistingUser(AuthuserDto) {
+        return this.authService.register(AuthuserDto);
     }
-    async LoginUser(authuserDto, response) {
-        const user = await this.usersService.findOneUser(authuserDto.email);
-        if (!user) {
-            throw new common_1.NotFoundException("User not found");
-        }
-        if (!await bcrypt.compare(authuserDto.password, user.password)) {
-            throw new common_1.BadRequestException("Invalid credentials");
-        }
-        const jwt = await this.jwtService.signAsync({ id: user.id, userName: user.userName });
-        response.cookie('jwt', jwt, { httpOnly: true });
-        return user;
+    async LoginUser(authuserDto) {
+        return this.authService.login(authuserDto);
     }
     updateUserById(id, updateUserDetails) {
         return this.usersService.updateUser(id, updateUserDetails);
@@ -51,34 +41,23 @@ let UsersController = class UsersController {
             throw new common_1.NotFoundException("User not found");
         }
     }
-    getAllUsersDetails(request) {
-        try {
-            const cookie = request.cookies['jwt'];
-            const data = this.jwtService.verify(cookie);
-            if (!data) {
-                throw new common_1.UnauthorizedException("Unauthorized");
-            }
-            return this.usersService.findUsers();
-        }
-        catch {
-            throw new common_1.UnauthorizedException("Unauthorized");
-        }
+    getUserDetails(email) {
+        return this.usersService.findOneUser(email);
     }
 };
 exports.UsersController = UsersController;
 __decorate([
     (0, common_1.Post)('register'),
-    __param(0, (0, common_1.Body)(new common_1.ValidationPipe)),
+    __param(0, (0, common_1.Body)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [authuser_dto_1.AuthenticateUser]),
+    __metadata("design:paramtypes", [signup_dto_1.Signup]),
     __metadata("design:returntype", Promise)
-], UsersController.prototype, "RegisterUser", null);
+], UsersController.prototype, "RegistingUser", null);
 __decorate([
     (0, common_1.Post)('login'),
     __param(0, (0, common_1.Body)()),
-    __param(1, (0, common_1.Res)({ passthrough: true })),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [authuser_dto_1.AuthenticateUser, Object]),
+    __metadata("design:paramtypes", [loginuser_dto_1.LoginUser]),
     __metadata("design:returntype", Promise)
 ], UsersController.prototype, "LoginUser", null);
 __decorate([
@@ -98,14 +77,14 @@ __decorate([
 ], UsersController.prototype, "deleteUserById", null);
 __decorate([
     (0, common_1.Get)(),
-    __param(0, (0, common_1.Req)()),
     __metadata("design:type", Function),
-    __metadata("design:paramtypes", [Object]),
+    __metadata("design:paramtypes", [String]),
     __metadata("design:returntype", void 0)
-], UsersController.prototype, "getAllUsersDetails", null);
+], UsersController.prototype, "getUserDetails", null);
 exports.UsersController = UsersController = __decorate([
     (0, common_1.Controller)('users'),
+    (0, common_1.UseInterceptors)(common_1.ClassSerializerInterceptor),
     __metadata("design:paramtypes", [users_service_1.UsersService,
-        jwt_1.JwtService])
+        auth_service_1.AuthService])
 ], UsersController);
 //# sourceMappingURL=users.controller.js.map

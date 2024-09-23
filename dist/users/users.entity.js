@@ -10,8 +10,7 @@ var __metadata = (this && this.__metadata) || function (k, v) {
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.User = void 0;
-const common_1 = require("@nestjs/common");
-const orders_entity_1 = require("../orders/orders.entity");
+const class_transformer_1 = require("class-transformer");
 const typeorm_1 = require("typeorm");
 let User = class User {
 };
@@ -30,17 +29,9 @@ __decorate([
 ], User.prototype, "email", void 0);
 __decorate([
     (0, typeorm_1.Column)(),
+    (0, class_transformer_1.Exclude)(),
     __metadata("design:type", String)
 ], User.prototype, "password", void 0);
-__decorate([
-    (0, typeorm_1.Column)(common_1.Optional),
-    __metadata("design:type", String)
-], User.prototype, "address", void 0);
-__decorate([
-    (0, typeorm_1.OneToOne)(() => orders_entity_1.Order),
-    (0, typeorm_1.JoinColumn)(),
-    __metadata("design:type", orders_entity_1.Order)
-], User.prototype, "order", void 0);
 exports.User = User = __decorate([
     (0, typeorm_1.Entity)('users')
 ], User);
