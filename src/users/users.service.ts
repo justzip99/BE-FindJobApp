@@ -1,5 +1,5 @@
-import { Injectable, UseGuards } from '@nestjs/common';
-import { AuthenticateUser } from './dto/request/authuser.dto';
+import { Injectable } from '@nestjs/common';
+import {  Signup } from './dto/request/signup.dto';
 import {updateUser } from './dto/request/updateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
@@ -10,7 +10,7 @@ export class UsersService {
     constructor(@InjectRepository(User) private userRepository: Repository<User>
 ) {
     }
-        createUser(authuser: AuthenticateUser):Promise<User> {
+        createUser(authuser: Signup):Promise<User> {
             const newUser = this.userRepository.create({... authuser});
             return this.userRepository.save(newUser);
     }
@@ -19,9 +19,6 @@ export class UsersService {
         return this.userRepository.update({id}, {...updateUserDetails})
     }
 
-    async findUsers(): Promise<User[]> {
-        return this.userRepository.find();
-    }
 
     async findOneUser(email: string): Promise<User> {
         return this.userRepository.findOne({where: {email}});

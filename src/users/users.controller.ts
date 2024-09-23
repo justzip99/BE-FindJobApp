@@ -1,43 +1,25 @@
-import { BadRequestException, Body, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, Query, Req, Res, UnauthorizedException, UseGuards, ValidationPipe } from '@nestjs/common';
-import { AuthenticateUser } from './dto/request/authuser.dto';
+import {Body, ClassSerializerInterceptor, Controller, Delete, Get, NotFoundException, Param, ParseIntPipe, Post, Put, UseInterceptors } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { updateUser } from './dto/request/updateUser.dto';
-import * as bcrypt from 'bcrypt';
-import { JwtService } from '@nestjs/jwt';
-import { Response, Request } from 'express';
+import { Signup } from './dto/request/signup.dto';
+import { LoginUser } from './dto/request/loginuser.dto';
+import { AuthService } from './auth.service';
 @Controller('users')
+@UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {  
     constructor(
-        private readonly usersService: UsersService,
-        private jwtService: JwtService
+        private usersService: UsersService,
+        private authService: AuthService
     ) {}
 
     @Post('register')
-    async RegisterUser(@Body(new ValidationPipe) AuthuserDto: AuthenticateUser) {
-        AuthuserDto.password = await bcrypt.hash(AuthuserDto.password, 10);
-        return this.usersService.createUser(AuthuserDto);
+    async RegistingUser(@Body() AuthuserDto: Signup) {
+        return this.authService.register(AuthuserDto);
     } 
 
     @Post('login')
-    async LoginUser(@Body() authuserDto: AuthenticateUser,
-                    @Res({passthrough: true}) response: Response
-) {
-        const user = await this.usersService.findOneUser(authuserDto.email);
-
-        if(!user) {
-            throw new NotFoundException("User not found");
-        }
-
-        if(!await bcrypt.compare(authuserDto.password, user.password)) {
-            throw new BadRequestException("Invalid credentials");
-        }
-
-        const jwt = await this.jwtService.signAsync({id: user.id, userName: user.userName})
-
-        response.cookie('jwt', jwt, {httpOnly: true})
-        return user;
-
-    
+    async LoginUser(@Body() authuserDto: LoginUser) {
+        return this.authService.login(authuserDto);
     }
 
     @Put(':id')
@@ -57,18 +39,8 @@ export class UsersController {
     }    
 
     @Get()
-    getAllUsersDetails(@Req() request: Request) {
-        try{
-        const cookie = request.cookies['jwt']
-        const data = this.jwtService.verify(cookie);
-        if(!data) {
-            throw new UnauthorizedException("Unauthorized");
-        }
-
-        return this.usersService.findUsers();
-        } catch {
-            throw new UnauthorizedException("Unauthorized");
-        }
+    getUserDetails( email: string) {
+        return this.usersService.findOneUser(email); 
     }
 }
 
