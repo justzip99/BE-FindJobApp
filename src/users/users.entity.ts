@@ -1,6 +1,5 @@
-import { Optional } from '@nestjs/common';
-import { Order } from 'src/orders/orders.entity';
-import {Column, Entity, JoinColumn, OneToMany, OneToOne, PrimaryGeneratedColumn} from 'typeorm';
+import { Exclude } from 'class-transformer';
+import {Column, Entity, PrimaryGeneratedColumn} from 'typeorm';
 
 @Entity('users')
 export class User {
@@ -14,12 +13,6 @@ export class User {
     email: string;
 
     @Column()
+    @Exclude()
     password: string;
-
-    @Column(Optional)
-    address: string;
-
-    @OneToOne(() => Order)
-    @JoinColumn()
-    order: Order;
 }

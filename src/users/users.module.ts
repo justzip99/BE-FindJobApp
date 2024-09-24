@@ -4,12 +4,12 @@ import { UsersService } from './users.service';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { JwtModule } from '@nestjs/jwt';
-import { Order } from 'src/orders/orders.entity';
+import { AuthService } from './auth.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Order]),
-  JwtModule.register({ secret: 'secret', signOptions: { expiresIn: '1d' }}),],
+  imports: [TypeOrmModule.forFeature([User]),
+  JwtModule.register({global: true, signOptions: { expiresIn: '1d' }}),],
   controllers: [UsersController],
-  providers: [UsersService]
+  providers: [UsersService, AuthService]
 })
 export class UsersModule {}
