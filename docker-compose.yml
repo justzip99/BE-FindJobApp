@@ -1,0 +1,37 @@
+services:
+  mysql:
+    image: mysql:latest
+    ports:
+      - '3307:3306'
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_USER: hieudm1
+      MYSQL_PASSWORD: Iamatwork
+      MYSQL_DATABASE: FindJob
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      timeout: 15s
+      retries: 10
+    restart: always
+    networks: 
+      - app-network
+  app:
+    build:
+      context: .
+      dockerfile: ./Dockerfile
+    ports:
+      - 3000:3000
+    depends_on:
+      mysql:
+        condition: service_healthy
+    networks: 
+    - app-network 
+    environment:
+      MYSQL_URL: mysql
+      MYSQL_USERNAME: root
+      MYSQL_PASSWORD: root
+      MYSQL_NAME: FindJob
+networks:
+  app-network:
+    driver: bridge
+  
