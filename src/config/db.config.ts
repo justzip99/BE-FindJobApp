@@ -9,5 +9,5 @@ export default (): TypeOrmModuleOptions  => ({
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_NAME,
   entities: [User],
-  synchronize: false,
+  synchronize: true,
 });
