@@ -8,9 +8,7 @@ export const dataSourceOptions: DataSourceOptions = {
   password: 'root',
   database: 'FindJob',
   entities: ['../**/*.entity.{ts,js}'],
-  migrations: [
-    '/home/hieudm1/Documents/Code Project/Nest-learning/FIndJobApp/build/migration/*.{ts,js}',
-  ],
+  migrations: ['./build/migration/*.{ts,js}'],
 };
 
 const dataSource = new DataSource(dataSourceOptions);
