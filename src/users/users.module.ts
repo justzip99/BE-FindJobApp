@@ -5,11 +5,14 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { User } from './users.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthService } from './auth.service';
+import { dataSourceOptions } from '../config/data_source.config';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User]),
-  JwtModule.register({global: true, signOptions: { expiresIn: '1d' }}),],
+  imports: [
+    TypeOrmModule.forFeature([User], dataSourceOptions),
+    JwtModule.register({ global: true, signOptions: { expiresIn: '1d' } }),
+  ],
   controllers: [UsersController],
-  providers: [UsersService, AuthService]
+  providers: [UsersService, AuthService],
 })
 export class UsersModule {}
