@@ -3,10 +3,10 @@ import { DataSource, DataSourceOptions } from 'typeorm';
 export const dataSourceOptions: DataSourceOptions = {
   type: 'mysql',
   host: process.env.MYSQL_URL,
-  port: 3307,
-  username: 'root',
-  password: 'root',
-  database: 'FindJob',
+  port: Number(process.env.MYSQL_PORT || '3306'),
+  username: process.env.MYSQL_USERNAME,
+  password: process.env.MYSQL_PASSWORD,
+  database: process.env.MYSQL_NAME,
   entities: ['../**/*.entity.{ts,js}'],
   migrations: ['./build/migration/*.{ts,js}'],
 };

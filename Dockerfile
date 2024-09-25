@@ -1,6 +1,10 @@
-FROM node:22-bullseye
+FROM node:latest
 WORKDIR /app
 COPY ./ /app
 RUN npm install
+RUN npm install ts-node --save-dev
+RUN npm run build
+RUN chmod +x /app/docker-entrypoint.sh
+
 EXPOSE 3000
-CMD ["npm", "run", "start:dev"]
+ENTRYPOINT ["./docker-entrypoint.sh"]
