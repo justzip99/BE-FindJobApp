@@ -1,28 +1,30 @@
 import { Exclude } from 'class-transformer';
-import {Column, Entity, OneToMany, PrimaryGeneratedColumn} from 'typeorm';
+import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from '../posts/entities/post.entity';
+import { IsOptional } from 'class-validator';
 
 @Entity('users')
 export class User {
-    @PrimaryGeneratedColumn()
-    id: number;
-    
-    @Column()
-    userName: string;
+  @PrimaryGeneratedColumn()
+  id: number;
 
-    @Column({unique: true})
-    email: string;
+  @Column()
+  userName: string;
 
-    @Column()
-    @Exclude()
-    password: string;
+  @Column({ unique: true })
+  email: string;
 
-    @Column()
-    resume: string;
+  @Column()
+  @Exclude()
+  password: string;
 
-    @Column()
-    balance: number;
+  @IsOptional()
+  @Column({ nullable: true })
+  resume: string;
 
-    @OneToMany(() => Post, (post) => post.user)
-    posts: Post[]
+  @Column({ default: 0 })
+  balance: number;
+
+  @OneToMany(() => Post, (post) => post.user)
+  posts: Post[];
 }
