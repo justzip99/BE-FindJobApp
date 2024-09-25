@@ -2,7 +2,6 @@
 
 
 # Apply database migrations
-npm run migrate:gen
 npm run migrate:run
 
 # Start server
