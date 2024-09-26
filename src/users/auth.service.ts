@@ -33,36 +33,43 @@ export class AuthService {
       email: savedUser.email,
     };
 
-    const access_token = await this.jwtService.signAsync(payload, {secret: process.env.JWT_SECRET})
+    const access_token = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET,
+    });
 
     return {
-        msg: 'User has been created',
-        access_token
-    }
+      msg: 'User has been created',
+      access_token,
+    };
   }
 
   async login(authuserDto: LoginUser) {
-    const userByEmail = await this.userService.findOneUser(authuserDto.email)
+    const userByEmail = await this.userService.findOneUser(authuserDto.email);
 
-    if(!userByEmail) {
-        throw new BadRequestException('Wrong email or password')
+    if (!userByEmail) {
+      throw new BadRequestException('Wrong email or password');
     }
 
-    const isMatchPassword = await bcrypt.compare(authuserDto.password, userByEmail.password)
+    const isMatchPassword = await bcrypt.compare(
+      authuserDto.password,
+      userByEmail.password,
+    );
 
-    if(!isMatchPassword) {
-        throw new BadRequestException('Wrong email or password')
+    if (!isMatchPassword) {
+      throw new BadRequestException('Wrong email or password');
     }
-    
+
     const payload = {
-        id: userByEmail.id,
-        email: userByEmail.email,
-      };
-  
-      const access_token = await this.jwtService.signAsync(payload, {secret: process.env.JWT_SECRET})
-      return {
-        msg: 'Login successfully',
-        access_token
-    }
+      id: userByEmail.id,
+      email: userByEmail.email,
+    };
+
+    const access_token = await this.jwtService.signAsync(payload, {
+      secret: process.env.JWT_SECRET,
+    });
+    return {
+      msg: 'Login successfully',
+      access_token,
+    };
   }
 }

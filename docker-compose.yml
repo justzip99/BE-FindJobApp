@@ -9,11 +9,11 @@ services:
       MYSQL_PASSWORD: Iamatwork
       MYSQL_DATABASE: FindJob
     healthcheck:
-      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
       timeout: 15s
       retries: 10
     restart: always
-    networks: 
+    networks:
       - app-network
   app:
     build:
@@ -24,14 +24,15 @@ services:
     depends_on:
       mysql:
         condition: service_healthy
-    networks: 
-    - app-network 
+    networks:
+      - app-network
     environment:
       MYSQL_URL: mysql
+      MYSQL_PORT: 3306
       MYSQL_USERNAME: root
       MYSQL_PASSWORD: root
       MYSQL_NAME: FindJob
+      JWT_SECRET: test-jwt-secret-123
 networks:
   app-network:
     driver: bridge
-  
