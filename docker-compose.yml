@@ -10,7 +10,7 @@ services:
       MYSQL_DATABASE: FindJob
     healthcheck:
       test: ['CMD', 'mysqladmin', 'ping', '-h', 'localhost']
-      timeout: 15s
+      timeout: 5s
       retries: 10
     restart: always
     networks:
