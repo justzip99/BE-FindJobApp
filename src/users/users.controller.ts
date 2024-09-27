@@ -47,8 +47,9 @@ export class UsersController {
 
   @Put()
   @UseGuards(AuthGuard)
-  updateUserById(@Request() request, @Body() updateUserDetails: UpdateUser) {
+  updateUserById(@Request() request,email: string ,@Body() updateUserDetails: UpdateUser) {
     return this.usersService.updateUser(
+      email,
       request.currentUser.id,
       updateUserDetails,
     );
@@ -57,11 +58,7 @@ export class UsersController {
   @Delete()
   @UseGuards(AuthGuard)
   deleteUserById(@Request() request) {
-    try {
       return this.usersService.deleteUser(request.currentUser.id);
-    } catch (err) {
-      throw new NotFoundException('User not found');
-    }
   }
 
   @Get()

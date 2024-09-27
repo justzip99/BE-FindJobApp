@@ -1,10 +1,14 @@
-import { Injectable, NotFoundException } from '@nestjs/common';
+import {
+  BadRequestException,
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { Signup } from './dto/request/signup.dto';
 import { UpdateUser } from './dto/request/updateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
-import { plainToInstance } from 'class-transformer';
 @Injectable()
 export class UsersService {
   constructor(
@@ -15,11 +19,21 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  async updateUser(id: number, updateUserDetails: UpdateUser) {
+  async updateUser(email: string, id: number, updateUserDetails: UpdateUser) {
     let updatedUser = await this.findUserById(id);
 
     if (!updatedUser) {
-      throw new NotFoundException('User not found with provided id');
+      throw new NotFoundException('User not found with provided ID');
+    }
+
+    const currentEmail = updatedUser.email;
+    const newEmail = updateUserDetails.email;
+
+    if (newEmail && newEmail !== currentEmail) {
+      const existingUser = await this.findUserByEmail(newEmail);
+      if (existingUser && existingUser.id !== id) {
+        throw new BadRequestException('Email already exists');
+      }
     }
 
     updatedUser = { ...updatedUser, ...updateUserDetails };
@@ -34,7 +48,15 @@ export class UsersService {
     return this.userRepository.findOne({ where: { email } });
   }
 
-  deleteUser(id: number) {
-    return this.userRepository.delete({ id });
+  async deleteUser(id: number) {
+    const deletedUser = await this.findUserById(id);
+    if (!deletedUser) {
+      throw new NotFoundException('Users not found by the provided ID');
+    }
+    await this.userRepository.remove(deletedUser);
+    return 'User deleted succesfully';
+  }
+  catch(error) {
+    throw new InternalServerErrorException('Failed to delete user');
   }
 }
