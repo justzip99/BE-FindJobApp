@@ -1,5 +1,6 @@
 import {
   Body,
+  Request,
   ClassSerializerInterceptor,
   Controller,
   Delete,
@@ -44,28 +45,28 @@ export class UsersController {
     return currentUser;
   }
 
-  @Put(':id')
+  @Put()
   @UseGuards(AuthGuard)
-  updateUserById(
-    @Param('id', ParseIntPipe) id: number,
-    @Body() updateUserDetails: updateUser,
-  ) {
-    return this.usersService.updateUser(id, updateUserDetails);
+  updateUserById(@Request() request, @Body() updateUserDetails: updateUser) {
+    return this.usersService.updateUser(
+      request.currentUser.id,
+      updateUserDetails,
+    );
   }
 
-  @Delete(':id')
+  @Delete()
   @UseGuards(AuthGuard)
-  deleteUserById(@Param('id') id: string) {
+  deleteUserById(@Request() request) {
     try {
-      return this.usersService.deleteUser(parseInt(id));
+      return this.usersService.deleteUser(request.currentUser.id);
     } catch (err) {
       throw new NotFoundException('User not found');
     }
   }
 
-  @Get('/:id')
+  @Get()
   @UseGuards(AuthGuard)
-  getUserDetails(@Param('id') id: number) {
-    return this.usersService.findUserById(id);
+  getUserDetails(@Request() request) {
+    return this.usersService.findUserById(request.currentUser.id);
   }
 }
