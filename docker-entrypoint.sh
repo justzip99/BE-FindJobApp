@@ -1,6 +1,5 @@
 #!/bin/bash
 
-
 # Apply database migrations
 npm run migrate:run
 
