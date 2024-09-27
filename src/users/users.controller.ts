@@ -44,7 +44,6 @@ export class UsersController {
     return currentUser;
   }
 
-
   @Put(':id')
   @UseGuards(AuthGuard)
   updateUserById(
@@ -55,6 +54,7 @@ export class UsersController {
   }
 
   @Delete(':id')
+  @UseGuards(AuthGuard)
   deleteUserById(@Param('id') id: string) {
     try {
       return this.usersService.deleteUser(parseInt(id));
