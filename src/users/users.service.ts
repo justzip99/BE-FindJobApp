@@ -49,14 +49,15 @@ export class UsersService {
   }
 
   async deleteUser(id: number) {
-    const deletedUser = await this.findUserById(id);
-    if (!deletedUser) {
-      throw new NotFoundException('Users not found by the provided ID');
+    try {
+      const deletedUser = await this.findUserById(id);
+      if (!deletedUser) {
+        throw new NotFoundException('Users not found by the provided ID');
+      }
+      await this.userRepository.remove(deletedUser);
+      return 'User deleted succesfully';
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete user');
     }
-    await this.userRepository.remove(deletedUser);
-    return 'User deleted succesfully';
-  }
-  catch(error) {
-    throw new InternalServerErrorException('Failed to delete user');
   }
 }
