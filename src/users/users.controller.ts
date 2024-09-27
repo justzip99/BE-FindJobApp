@@ -14,7 +14,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
-import { updateUser } from './dto/request/updateUser.dto';
+import { UpdateUser } from './dto/request/updateUser.dto';
 import { Signup } from './dto/request/signup.dto';
 import { LoginUser } from './dto/request/loginuser.dto';
 import { AuthService } from './auth.service';
@@ -47,7 +47,7 @@ export class UsersController {
 
   @Put()
   @UseGuards(AuthGuard)
-  updateUserById(@Request() request, @Body() updateUserDetails: updateUser) {
+  updateUserById(@Request() request, @Body() updateUserDetails: UpdateUser) {
     return this.usersService.updateUser(
       request.currentUser.id,
       updateUserDetails,

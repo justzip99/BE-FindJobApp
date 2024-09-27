@@ -1,9 +1,10 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Signup } from './dto/request/signup.dto';
-import { updateUser } from './dto/request/updateUser.dto';
+import { UpdateUser } from './dto/request/updateUser.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { User } from './users.entity';
+import { plainToInstance } from 'class-transformer';
 @Injectable()
 export class UsersService {
   constructor(
@@ -14,7 +15,7 @@ export class UsersService {
     return this.userRepository.save(newUser);
   }
 
-  async updateUser(id: number, updateUserDetails: updateUser) {
+  async updateUser(id: number, updateUserDetails: UpdateUser) {
     let updatedUser = await this.findUserById(id);
 
     if (!updatedUser) {
