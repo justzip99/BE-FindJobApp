@@ -6,7 +6,6 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
-import { Observable } from 'rxjs';
 import { UsersService } from '../users/users.service';
 
 @Injectable()
@@ -22,7 +21,6 @@ export class AuthGuard implements CanActivate {
       const request = context.switchToHttp().getRequest();
       const token = request.headers.authorization.split(' ')[1];
 
-      console.log(token);
       if (!token) {
         throw new ForbiddenException('Please provide access token');
       }
@@ -31,7 +29,6 @@ export class AuthGuard implements CanActivate {
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
-      console.log(payload);
 
       //find user in DB base on JWT verify
       const user = await this.userService.findUserByEmail(payload.email);
