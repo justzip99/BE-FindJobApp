@@ -3,5 +3,7 @@ export class CreatePostDto {
 
     location: string;
 
+    salary: number;
+
     description: string;
 }

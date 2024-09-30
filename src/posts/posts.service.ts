@@ -19,7 +19,7 @@ export class PostsService {
   }
 
   findAll() {
-    return `This action returns all posts`;
+    return this.postRepostiory.find();
   }
 
   findOne(id: number) {

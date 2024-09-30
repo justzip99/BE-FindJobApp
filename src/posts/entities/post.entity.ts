@@ -26,6 +26,9 @@ export class Post {
   @Column()
   description: string;
 
+  @Column()
+  salary: number;
+
   @ManyToOne(() => User, (user) => user.posts)
   @Transform(({obj}) => obj.user.id)
   user: User;

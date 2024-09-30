@@ -32,7 +32,7 @@ export class PostsController {
   }
 
   @Get()
-  findAll() {
+  getAllPosts() {
     return this.postsService.findAll();
   }
 
