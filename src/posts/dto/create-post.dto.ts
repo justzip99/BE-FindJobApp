@@ -1,9 +1,9 @@
 export class CreatePostDto {
-    position: string;
+  job_position: string;
 
-    location: string;
+  location: string;
 
-    salary: number;
+  salary: number;
 
-    description: string;
+  description: string;
 }

@@ -18,6 +18,21 @@ export class User {
   @Exclude()
   password: string;
 
+  @Column()
+  description: string;
+
+  @Column()
+  skill: string;
+
+  @Column()
+  education: string;
+
+  @Column()
+  experience: string;
+
+  @Column()
+  language: string;
+
   @IsOptional()
   @Column({ nullable: true })
   resume: string;

@@ -7,7 +7,16 @@ export class UpdateUser {
   @IsEmail()
   email: string;
 
-  @IsString()
+  description: string;
+
+  skill: string;
+
+  education: string;
+
+  experience: string;
+
+  language: string;
+
   resume: string;
 
   @IsNumber()
