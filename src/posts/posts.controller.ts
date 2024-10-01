@@ -16,7 +16,7 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { CurrentUser } from '../users/custome_decorator/currentUser.decorator';
 import { User } from '../users/users.entity';
 import { AuthGuard } from '../guards/auth.guard';
-
+import { Header } from '@nestjs/common';
 @Controller('posts')
 @UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
@@ -33,8 +33,12 @@ export class PostsController {
 
   @Get()
   @UseGuards(AuthGuard)
-  getAllPosts() {
-    return this.postsService.findAll();
+  @Header('Content-Type', 'application/json')
+  async getAllPosts() {
+    const posts = await this.postsService.findAll();
+    return {
+      data: posts,
+    };
   }
 
   @Get(':id')

@@ -47,18 +47,25 @@ export class UsersController {
 
   @Put()
   @UseGuards(AuthGuard)
-  updateUserById(@Request() request,email: string ,@Body() updateUserDetails: UpdateUser) {
-    return this.usersService.updateUser(
-      email,
+  async updateUserById(
+    @Request() request,
+    @Body() updateUserDetails: UpdateUser,
+  ) {
+    const updatedUser = await this.usersService.updateUser(
+      request.currentUser.email,
       request.currentUser.id,
       updateUserDetails,
     );
+
+    // Manually exclude password before returning the response
+    const { password, ...result } = updatedUser;
+    return result;
   }
 
   @Delete()
   @UseGuards(AuthGuard)
   deleteUserById(@Request() request) {
-      return this.usersService.deleteUser(request.currentUser.id);
+    return this.usersService.deleteUser(request.currentUser.id);
   }
 
   @Get()
