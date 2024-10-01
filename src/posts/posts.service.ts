@@ -8,7 +8,6 @@ import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
-import { CurrentUser } from '../users/custome_decorator/currentUser.decorator';
 import { User } from '../users/users.entity';
 
 @Injectable()
