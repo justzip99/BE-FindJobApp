@@ -3,30 +3,35 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/users.entity';
 import { Transform } from 'class-transformer';
+import { ApplicationPost } from '../../application/entities/application-post.entity';
 
 @Entity('posts')
 export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: "" })
+  @Column({ default: '' })
   job_position: string;
 
-  @Column({default: ""})
+  @Column({ default: '' })
   location: string;
 
   @CreateDateColumn()
   datePost: Date;
 
-  @Column({default: ""})
+  @Column({ default: '' })
   description: string;
 
-  @Column({default: 0})
+  @Column({ default: 0 })
   salary: number;
+
+  @OneToMany(() => ApplicationPost, (applicationPost) => applicationPost.post)
+  applicationPosts: ApplicationPost[];
 
   @ManyToOne(() => User, (user) => user.posts)
   @Transform(({ obj }) => obj.user.id)
