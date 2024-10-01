@@ -13,19 +13,19 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: 0 })
+  @Column({ default: "" })
   job_position: string;
 
-  @Column()
+  @Column({default: ""})
   location: string;
 
   @CreateDateColumn()
   datePost: Date;
 
-  @Column()
+  @Column({default: ""})
   description: string;
 
-  @Column()
+  @Column({default: 0})
   salary: number;
 
   @ManyToOne(() => User, (user) => user.posts)
