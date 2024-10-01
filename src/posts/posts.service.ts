@@ -1,4 +1,8 @@
-import { Injectable } from '@nestjs/common';
+import {
+  Injectable,
+  InternalServerErrorException,
+  NotFoundException,
+} from '@nestjs/common';
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
@@ -13,7 +17,10 @@ export class PostsService {
     @InjectRepository(Post) private postRepostiory: Repository<Post>,
   ) {}
   createPost(createPostDto: CreatePostDto, currentUser: User) {
-    const newPost = this.postRepostiory.create({ ...createPostDto, datePost: new Date });
+    const newPost = this.postRepostiory.create({
+      ...createPostDto,
+      datePost: new Date(),
+    });
     newPost.user = currentUser;
     return this.postRepostiory.save(newPost);
   }
@@ -22,15 +29,36 @@ export class PostsService {
     return this.postRepostiory.find();
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} post`;
+  findPostById(id: number) {
+    return this.postRepostiory.findOne({ where: { id } });
   }
 
-  update(id: number, updatePostDto: UpdatePostDto) {
-    return `This action updates a #${id} post`;
+  async updatePost(id: number, updatePostDto: UpdatePostDto) {
+    let post = await this.findPostById(id);
+
+    if (!post) {
+      throw new NotFoundException(`Not found post with the provided id ${id}`);
+    }
+
+    post = { ...post, ...updatePostDto };
+
+    return this.postRepostiory.save(post);
   }
 
-  remove(id: number) {
-    return `This action removes a #${id} post`;
+  async delete(id: number) {
+    try {
+      const post = await this.findPostById(id);
+
+      if (!post) {
+        throw new NotFoundException(
+          `Not found post with the provided id ${id}`,
+        );
+      }
+
+      await this.postRepostiory.remove(post);
+      return 'Post deleted succesfully';
+    } catch (error) {
+      throw new InternalServerErrorException('Failed to delete post');
+    }
   }
 }

@@ -3,7 +3,6 @@ import {
   CreateDateColumn,
   Entity,
   ManyToOne,
-  PrimaryColumn,
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/users.entity';
@@ -14,22 +13,22 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
-  position: string;
+  @Column({ default: "" })
+  job_position: string;
 
-  @Column()
+  @Column({default: ""})
   location: string;
 
   @CreateDateColumn()
   datePost: Date;
 
-  @Column()
+  @Column({default: ""})
   description: string;
 
-  @Column()
+  @Column({default: 0})
   salary: number;
 
   @ManyToOne(() => User, (user) => user.posts)
-  @Transform(({obj}) => obj.user.id)
+  @Transform(({ obj }) => obj.user.id)
   user: User;
 }

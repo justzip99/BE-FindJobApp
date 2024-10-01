@@ -8,7 +8,7 @@ export class User {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column()
+  @Column({ default: '' })
   userName: string;
 
   @Column({ unique: true })
@@ -17,6 +17,21 @@ export class User {
   @Column()
   @Exclude()
   password: string;
+
+  @Column({ nullable: true })
+  description: string;
+
+  @Column({ nullable: true })
+  skill: string;
+
+  @Column({ nullable: true })
+  education: string;
+
+  @Column({ nullable: true })
+  experience: string;
+
+  @Column({ nullable: true })
+  language: string;
 
   @IsOptional()
   @Column({ nullable: true })
