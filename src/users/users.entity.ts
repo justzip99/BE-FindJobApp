@@ -2,6 +2,7 @@ import { Exclude } from 'class-transformer';
 import { Column, Entity, OneToMany, PrimaryGeneratedColumn } from 'typeorm';
 import { Post } from '../posts/entities/post.entity';
 import { IsOptional } from 'class-validator';
+import { Application } from '../application/entities/application.entity';
 
 @Entity('users')
 export class User {
@@ -39,6 +40,9 @@ export class User {
 
   @Column({ default: 0 })
   balance: number;
+
+  @OneToMany(() => Application, (application) => application.user)
+  applications: Application[];
 
   @OneToMany(() => Post, (post) => post.user)
   posts: Post[];
