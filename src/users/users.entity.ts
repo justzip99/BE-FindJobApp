@@ -42,6 +42,9 @@ export class User {
   @IsOptional()
   @Column({ nullable: true })
   resume: string;
+
+  @Column({ nullable: true })
+  avatarURL: string;
   
   @Column({ default: 0 })
   balance: number;
