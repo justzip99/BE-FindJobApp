@@ -15,23 +15,28 @@ export class ApplicationsService {
     private applicationPostRepository: Repository<ApplicationPost>,
   ) {}
 
-  createApplication(userId: number): Promise<Application> {
+  addApplicationAndApplyToPost(userId: number, postId: number) {
     const newApplication = this.applicationRepository.create({ userId });
-    return this.applicationRepository.save(newApplication);
-  }
 
-  addApplicationToPost(applicationId: number, postId: number) {
-    const newApplicationPost = this.applicationPostRepository.create({
-      application: { id: applicationId },
-      post: { id: postId },
-    });
+    return this.applicationRepository
+      .save(newApplication)
+      .then((savedApplication) => {
+        const newApplicationPost = this.applicationPostRepository.create({
+          application: { id: savedApplication.id },
+          post: { id: postId },
+        });
 
-    return this.applicationPostRepository
-      .save(newApplicationPost)
-      .then((result) => ({
-        applicationId: result.applicationId,
-        postId: result.postId,
-      }));
+        return this.applicationPostRepository
+          .save(newApplicationPost)
+          .then(() => ({
+            success: true,
+            message: 'Applied to post successfully',
+          }))
+          .catch(() => ({
+            success: false,
+            message: 'Failed to apply to post',
+          }));
+      });
   }
 
   findApplicationsForUser(userId: number) {
@@ -57,7 +62,7 @@ export class ApplicationsService {
     });
 
     await this.applicationRepository.remove(application);
-    
+
     return 'Application and related entries deleted successfully';
   }
 }

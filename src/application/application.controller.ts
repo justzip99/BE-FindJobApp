@@ -11,8 +11,7 @@ import {
   UseInterceptors,
 } from '@nestjs/common';
 import { ApplicationsService } from './application.service';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
+
 import { AuthGuard } from '../guards/auth.guard';
 import { CurrentUser } from '../users/custome_decorator/currentUser.decorator';
 import { User } from '../users/users.entity';
@@ -22,22 +21,17 @@ import { User } from '../users/users.entity';
 export class ApplicationsController {
   constructor(private readonly applicationsService: ApplicationsService) {}
 
-  @Post('create')
+  @Post('apply-post')
   @UseGuards(AuthGuard)
-  createApplication(@CurrentUser() currentUser: User) {
-    return this.applicationsService.createApplication(currentUser.id);
-  }
-
-  @Post(':applicationId/add-apply/:postId')
-  @UseGuards(AuthGuard)
-  addApplicationToPost(
-    @Param('applicationId') applicationId: string,
-    @Param('postId') postId: string,
+  async applyToPost(
+    @CurrentUser() currentUser: User,
+    @Body() body: { postId: number },
   ) {
-    return this.applicationsService.addApplicationToPost(
-      +applicationId,
-      +postId,
+    const result = await this.applicationsService.addApplicationAndApplyToPost(
+      currentUser.id,
+      body.postId,
     );
+    return result;
   }
 
   @Get()
