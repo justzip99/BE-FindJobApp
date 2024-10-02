@@ -33,6 +33,10 @@ export class UpdateUser {
   @IsOptional()
   resume: string;
 
+  @IsString()
+  @IsOptional()
+  avatarURL: string;
+
   @IsOptional()
   @IsNumber()
   balance: number;
