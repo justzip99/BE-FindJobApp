@@ -4,6 +4,7 @@ import {
   ExecutionContext,
   ForbiddenException,
   BadRequestException,
+  UnauthorizedException,
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { UsersService } from '../users/users.service';
@@ -41,7 +42,7 @@ export class AuthGuard implements CanActivate {
       //Assign user to request object
       request.currentUser = user;
     } catch (error) {
-      throw new ForbiddenException('Invalid or expired token');
+      throw new UnauthorizedException('Invalid or expired token');
     }
     return true;
   }
