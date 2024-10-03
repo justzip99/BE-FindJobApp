@@ -50,9 +50,23 @@ export class PostsService {
       throw new NotFoundException(`Not found post with the provided id ${id}`);
     }
 
-    post = { ...post, ...updatePostDto };
+    const mergeLocation = (current: any, updates: any) => ({
+      address: updates.address || current.address,
+      province: updates.province || current.province,
+      district: updates.district || current.district,
+      lat: updates.lat !== undefined ? updates.lat : current.lat,
+      lng: updates.lng !== undefined ? updates.lng : current.lng,
+    });
 
-    return this.postRepository.save(post);
+    const updatedPost = {
+      ...post,
+      ...updatePostDto,
+      location: updatePostDto.location
+        ? mergeLocation(post.location, updatePostDto.location)
+        : post.location,
+    };
+
+    return this.postRepository.save(updatedPost);
   }
 
   async delete(id: number) {

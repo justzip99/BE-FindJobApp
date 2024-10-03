@@ -3,6 +3,7 @@ import {
   Injectable,
   InternalServerErrorException,
   NotFoundException,
+  Logger,
 } from '@nestjs/common';
 import { Signup } from './dto/request/signup.dto';
 import { UpdateUser } from './dto/request/updateUser.dto';
@@ -36,7 +37,25 @@ export class UsersService {
       }
     }
 
-    updatedUser = { ...updatedUser, ...updateUserDetails };
+    let locationUpdate = updatedUser.location;
+
+    if (updateUserDetails.location) {
+      const { address, province, district, lat, lng } =
+        updateUserDetails.location;
+      locationUpdate = {
+        address: address ?? updatedUser.location?.address,
+        province: province ?? updatedUser.location?.province,
+        district: district ?? updatedUser.location?.district,
+        lat: lat ?? updatedUser.location?.lat,
+        lng: lng ?? updatedUser.location?.lng,
+      };
+    }
+
+    updatedUser = {
+      ...updatedUser,
+      ...updateUserDetails,
+      location: locationUpdate,
+    };
     return this.userRepository.save(updatedUser);
   }
 

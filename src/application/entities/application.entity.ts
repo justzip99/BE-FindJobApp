@@ -6,6 +6,7 @@ import {
   OneToMany,
 } from 'typeorm';
 import { User } from '../../users/users.entity';
+import { ApplicationPost } from './application-post.entity';
 
 @Entity('applications')
 export class Application {
@@ -19,9 +20,9 @@ export class Application {
   user: User;
 
   @OneToMany(
-    () => Application,
+    () => ApplicationPost,
     (applicationPost) => applicationPost.application,
   )
-  applicationPosts: Application[];
+  applicationPosts: ApplicationPost[];
   application: any;
 }

@@ -18,13 +18,19 @@ export class Post {
   @Column({ default: '' })
   job_position: string;
 
-  @Column({ default: '' })
-  location: string;
+  @Column({ type: 'json', nullable: true })
+  location: {
+    address: string;
+    province: string;
+    district: string;
+    lat: number;
+    lng: number;
+  };
 
   @CreateDateColumn()
   datePost: Date;
 
-  @Column({ default: '' })
+  @Column({ type: 'varchar', length: 1000, default: '' })
   description: string;
 
   @Column({ default: 0 })
