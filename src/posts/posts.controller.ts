@@ -37,7 +37,15 @@ export class PostsController {
   async getAllPosts() {
     const posts = await this.postsService.findAll();
     return {
-      data: posts,
+      data: posts.map((post) => ({
+        id: post.id,
+        job_position: post.job_position,
+        location: post.location,
+        datePost: post.datePost,
+        description: post.description,
+        salary: post.salary,
+        userId: post.user.id, // Include userId in the response
+      })),
     };
   }
 

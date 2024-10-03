@@ -13,23 +13,34 @@ import { User } from '../users/users.entity';
 @Injectable()
 export class PostsService {
   constructor(
-    @InjectRepository(Post) private postRepostiory: Repository<Post>,
+    @InjectRepository(Post) private postRepository: Repository<Post>,
   ) {}
-  createPost(createPostDto: CreatePostDto, currentUser: User) {
-    const newPost = this.postRepostiory.create({
+  async createPost(createPostDto: CreatePostDto, currentUser: User) {
+    const newPost = this.postRepository.create({
       ...createPostDto,
       datePost: new Date(),
+      user: currentUser,
     });
-    newPost.user = currentUser;
-    return this.postRepostiory.save(newPost);
+
+    const savedPost = await this.postRepository.save(newPost);
+
+    return {
+      id: savedPost.id,
+      job_position: savedPost.job_position,
+      location: savedPost.location,
+      datePost: savedPost.datePost,
+      description: savedPost.description,
+      salary: savedPost.salary,
+      userId: savedPost.user.id,
+    };
   }
 
   findAll() {
-    return this.postRepostiory.find();
+    return this.postRepository.find({ relations: ['user'] });
   }
 
   findPostById(id: number) {
-    return this.postRepostiory.findOne({ where: { id } });
+    return this.postRepository.findOne({ where: { id } });
   }
 
   async updatePost(id: number, updatePostDto: UpdatePostDto) {
@@ -41,7 +52,7 @@ export class PostsService {
 
     post = { ...post, ...updatePostDto };
 
-    return this.postRepostiory.save(post);
+    return this.postRepository.save(post);
   }
 
   async delete(id: number) {
@@ -54,7 +65,7 @@ export class PostsService {
         );
       }
 
-      await this.postRepostiory.remove(post);
+      await this.postRepository.remove(post);
       return 'Post deleted succesfully';
     } catch (error) {
       throw new InternalServerErrorException('Failed to delete post');
