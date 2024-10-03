@@ -12,6 +12,7 @@ import {
   Put,
   UseGuards,
   UseInterceptors,
+  Logger,
 } from '@nestjs/common';
 import { UsersService } from './users.service';
 import { UpdateUser } from './dto/request/updateUser.dto';
@@ -24,6 +25,7 @@ import { CurrentUser } from './custome_decorator/currentUser.decorator';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
+  private readonly logger = new Logger(UsersController.name);
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
@@ -51,13 +53,13 @@ export class UsersController {
     @Request() request,
     @Body() updateUserDetails: UpdateUser,
   ) {
+    
     const updatedUser = await this.usersService.updateUser(
       request.currentUser.email,
       request.currentUser.id,
       updateUserDetails,
     );
 
-    // Manually exclude password before returning the response
     const { password, ...result } = updatedUser;
     return result;
   }

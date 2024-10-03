@@ -44,7 +44,7 @@ export class PostsController {
         datePost: post.datePost,
         description: post.description,
         salary: post.salary,
-        userId: post.user.id, // Include userId in the response
+        userId: post.user.id, 
       })),
     };
   }
