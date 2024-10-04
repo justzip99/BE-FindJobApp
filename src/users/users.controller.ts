@@ -46,10 +46,9 @@ export class UsersController {
     return this.usersService.findUserById(id);
   }
 
-  @Get('me')
+  @Get()
   @UseGuards(AuthGuard)
   getCurrentUser(@CurrentUser() currentUser: User) {
-     console.log('Current user in controller:', currentUser);
     return currentUser;
   }
 

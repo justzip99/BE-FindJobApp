@@ -60,7 +60,6 @@ export class UsersService {
   }
 
   async findUserById(id: number): Promise<User> {
-    console.log('User found:', User);
     return this.userRepository.findOne({ where: { id } });
   }
 
@@ -81,3 +80,4 @@ export class UsersService {
     }
   }
 }
+
