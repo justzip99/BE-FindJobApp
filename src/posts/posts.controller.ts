@@ -10,6 +10,7 @@ import {
   UseInterceptors,
   Put,
   Request,
+  Patch,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -42,6 +43,7 @@ export class PostsController {
         job_position: post.job_position,
         location: post.location,
         datePost: post.datePost,
+        expDatePost: post.expDatePost,
         description: post.description,
         salary: post.salary,
         userId: post.user.id,
@@ -61,6 +63,7 @@ export class PostsController {
         job_position: post.job_position,
         location: post.location,
         datePost: post.datePost,
+        expDatePost: post.expDatePost,
         description: post.description,
         salary: post.salary,
         userId: post.user.id,
@@ -78,6 +81,25 @@ export class PostsController {
   @UseGuards(AuthGuard)
   update(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
     return this.postsService.updatePost(+id, updatePostDto);
+  }
+
+  @Patch('renew-Date/:id')
+  @UseGuards(AuthGuard)
+  async renewPost(@Param('id') id: number) {
+    const renewedPost = await this.postsService.renewDatePost(id);
+
+    return {
+      data: {
+        id: renewedPost.id,
+        job_position: renewedPost.job_position,
+        location: renewedPost.location,
+        datePost: renewedPost.datePost,
+        expDatePost: renewedPost.expDatePost,
+        description: renewedPost.description,
+        salary: renewedPost.salary,
+        userId: renewedPost.user.id,
+      },
+    };
   }
 
   @Delete(':id')

@@ -7,7 +7,7 @@ import {
   PrimaryGeneratedColumn,
 } from 'typeorm';
 import { User } from '../../users/users.entity';
-import { Transform } from 'class-transformer';
+import { Expose, Transform } from 'class-transformer';
 import { ApplicationPost } from '../../application/entities/application-post.entity';
 
 @Entity('posts')
@@ -29,6 +29,13 @@ export class Post {
 
   @CreateDateColumn()
   datePost: Date;
+
+  @Expose()
+  get expDatePost(): Date {
+    const expDate = new Date(this.datePost);
+    expDate.setDate(expDate.getDate() + 30);
+    return expDate;
+  }
 
   @Column({ type: 'varchar', length: 1000, default: '' })
   description: string;

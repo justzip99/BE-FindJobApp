@@ -10,7 +10,7 @@ import { dataSourceOptions } from '../config/data_source.config';
 @Module({
   imports: [
     TypeOrmModule.forFeature([User], dataSourceOptions),
-    JwtModule.register({ global: true, signOptions: { expiresIn: '1d' } }),
+    JwtModule.register({  signOptions: { expiresIn: '1d' } }),
   ],
   controllers: [UsersController],
   providers: [UsersService, AuthService],

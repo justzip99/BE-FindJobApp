@@ -18,7 +18,6 @@ export class AuthGuard implements CanActivate {
 
   async canActivate(context: ExecutionContext): Promise<boolean> {
     try {
-      //take token from header
       const request = context.switchToHttp().getRequest();
       const token = request.headers.authorization.split(' ')[1];
 
@@ -26,12 +25,10 @@ export class AuthGuard implements CanActivate {
         throw new ForbiddenException('Please provide access token');
       }
 
-      //JWT verify token
       const payload = await this.jwtService.verifyAsync(token, {
         secret: process.env.JWT_SECRET,
       });
 
-      //find user in DB base on JWT verify
       const user = await this.userService.findUserByEmail(payload.email);
       if (!user) {
         throw new BadRequestException(
@@ -39,7 +36,6 @@ export class AuthGuard implements CanActivate {
         );
       }
 
-      //Assign user to request object
       request.currentUser = user;
     } catch (error) {
       throw new UnauthorizedException('Invalid or expired token');

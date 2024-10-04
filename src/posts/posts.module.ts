@@ -6,10 +6,15 @@ import { Post } from './entities/post.entity';
 import { UsersService } from '../users/users.service';
 import { User } from '../users/users.entity';
 import { ApplicationPost } from '../application/entities/application-post.entity';
+import { JwtModule } from '@nestjs/jwt';
+import { AuthGuard } from '../guards/auth.guard';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Post, User, ApplicationPost])],
+  imports: [
+    TypeOrmModule.forFeature([Post, User, ApplicationPost]),
+    JwtModule.register({ signOptions: { expiresIn: '1d' } }),
+  ],
   controllers: [PostsController],
-  providers: [PostsService, UsersService],
+  providers: [PostsService, UsersService, AuthGuard],
 })
 export class PostsModule {}
