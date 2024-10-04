@@ -35,8 +35,15 @@ export class PostsService {
     };
   }
 
-  findAll() {
+  findAllPost() {
     return this.postRepository.find({ relations: ['user'] });
+  }
+
+  async findCurrentUserPosts(userId: number) {
+    return this.postRepository.find({
+      where: { user: { id: userId } },
+      relations: ['user'],
+    });
   }
 
   findPostById(id: number) {

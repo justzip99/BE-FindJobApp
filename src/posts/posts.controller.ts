@@ -9,6 +9,7 @@ import {
   ClassSerializerInterceptor,
   UseInterceptors,
   Put,
+  Request,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto } from './dto/create-post.dto';
@@ -31,11 +32,10 @@ export class PostsController {
     return this.postsService.createPost(createPostDto, currentUser);
   }
 
-  @Get()
-  @UseGuards(AuthGuard)
+  @Get('all-posts')
   @Header('Content-Type', 'application/json')
   async getAllPosts() {
-    const posts = await this.postsService.findAll();
+    const posts = await this.postsService.findAllPost();
     return {
       data: posts.map((post) => ({
         id: post.id,
@@ -44,7 +44,26 @@ export class PostsController {
         datePost: post.datePost,
         description: post.description,
         salary: post.salary,
-        userId: post.user.id, 
+        userId: post.user.id,
+      })),
+    };
+  }
+
+  @Get('current-user')
+  @UseGuards(AuthGuard)
+  @Header('Content-Type', 'application/json')
+  async getCurrentUserPosts(@Request() request) {
+    const userId = request.currentUser.id;
+    const posts = await this.postsService.findCurrentUserPosts(userId);
+    return {
+      data: posts.map((post) => ({
+        id: post.id,
+        job_position: post.job_position,
+        location: post.location,
+        datePost: post.datePost,
+        description: post.description,
+        salary: post.salary,
+        userId: post.user.id,
       })),
     };
   }
