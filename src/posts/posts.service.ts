@@ -29,6 +29,7 @@ export class PostsService {
       job_position: savedPost.job_position,
       location: savedPost.location,
       datePost: savedPost.datePost,
+      expDatePost: savedPost.expDatePost,
       description: savedPost.description,
       salary: savedPost.salary,
       userId: savedPost.user.id,
@@ -47,7 +48,10 @@ export class PostsService {
   }
 
   findPostById(id: number) {
-    return this.postRepository.findOne({ where: { id } });
+    return this.postRepository.findOne({
+      where: { id },
+      relations: ['user'],
+    });
   }
 
   async updatePost(id: number, updatePostDto: UpdatePostDto) {
@@ -74,6 +78,18 @@ export class PostsService {
     };
 
     return this.postRepository.save(updatedPost);
+  }
+
+  async renewDatePost(id: number): Promise<Post> {
+    let post = await this.findPostById(id);
+
+    if (!post) {
+      throw new NotFoundException(`Post with ID ${id} not found`);
+    }
+
+    post.datePost = new Date();
+
+    return this.postRepository.save(post);
   }
 
   async delete(id: number) {

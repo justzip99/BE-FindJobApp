@@ -25,7 +25,6 @@ import { CurrentUser } from './custome_decorator/currentUser.decorator';
 @Controller('users')
 @UseInterceptors(ClassSerializerInterceptor)
 export class UsersController {
-  private readonly logger = new Logger(UsersController.name);
   constructor(
     private usersService: UsersService,
     private authService: AuthService,
@@ -41,9 +40,16 @@ export class UsersController {
     return this.authService.login(authuserDto);
   }
 
-  @Get('current_user')
+  @Get(':id')
+  @UseGuards(AuthGuard)
+  getUserDetails(@Param('id') id: number) {
+    return this.usersService.findUserById(id);
+  }
+
+  @Get('me')
   @UseGuards(AuthGuard)
   getCurrentUser(@CurrentUser() currentUser: User) {
+     console.log('Current user in controller:', currentUser);
     return currentUser;
   }
 
@@ -53,7 +59,6 @@ export class UsersController {
     @Request() request,
     @Body() updateUserDetails: UpdateUser,
   ) {
-    
     const updatedUser = await this.usersService.updateUser(
       request.currentUser.email,
       request.currentUser.id,
@@ -68,11 +73,5 @@ export class UsersController {
   @UseGuards(AuthGuard)
   deleteUserById(@Request() request) {
     return this.usersService.deleteUser(request.currentUser.id);
-  }
-
-  @Get()
-  @UseGuards(AuthGuard)
-  getUserDetails(@Request() request) {
-    return this.usersService.findUserById(request.currentUser.id);
   }
 }
