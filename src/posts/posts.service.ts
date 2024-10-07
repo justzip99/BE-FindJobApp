@@ -1,4 +1,5 @@
 import {
+  BadRequestException,
   Injectable,
   InternalServerErrorException,
   NotFoundException,
@@ -14,8 +15,20 @@ import { User } from '../users/users.entity';
 export class PostsService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
+    @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async createPost(createPostDto: CreatePostDto, currentUser: User) {
+      const postCost = 500000; 
+
+      if (currentUser.balance < postCost) {
+        throw new BadRequestException('Insufficient balance to create a post');
+      }
+
+      currentUser.balance -= postCost;
+
+      await this.userRepository.save(currentUser);
+
+
     const newPost = this.postRepository.create({
       ...createPostDto,
       datePost: new Date(),

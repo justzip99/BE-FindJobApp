@@ -20,7 +20,7 @@ export class User {
   password: string;
 
   @IsOptional()
-  @Column({type:'varchar',length: 1000 ,nullable: true })
+  @Column({ type: 'varchar', length: 1000, nullable: true })
   description: string;
 
   @IsOptional()
@@ -46,7 +46,7 @@ export class User {
   @Column({ nullable: true })
   avatarURL: string;
 
-  @Column({ default: 0 })
+  @Column({ type: 'decimal', precision: 10, default: 0 })
   balance: number;
 
   @Column({ type: 'json', nullable: true })

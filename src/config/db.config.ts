@@ -7,7 +7,7 @@ import { ApplicationPost } from '../application/entities/application-post.entity
 export default (): TypeOrmModuleOptions => ({
   type: 'mysql',
   host: process.env.MYSQL_URL,
-  port: Number(process.env.MYSQL_PORT || '3306'),
+  port: Number(process.env.MYSQL_PORT ),
   username: process.env.MYSQL_USERNAME,
   password: process.env.MYSQL_PASSWORD,
   database: process.env.MYSQL_NAME,
