@@ -1,10 +1,9 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
-import { CreateApplicationDto } from './dto/create-application.dto';
-import { UpdateApplicationDto } from './dto/update-application.dto';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 import { ApplicationPost } from './entities/application-post.entity';
 import { Application } from './entities/application.entity';
+import { transformApplications } from './dto/application-JSON-format.dto';
 
 @Injectable()
 export class ApplicationsService {
@@ -40,10 +39,12 @@ export class ApplicationsService {
   }
 
   findApplicationsForUser(userId: number) {
-    return this.applicationRepository.find({
-      where: { userId },
-      relations: ['applicationPosts', 'applicationPosts.post'],
-    });
+    return this.applicationRepository
+      .find({
+        where: { userId },
+        relations: ['applicationPosts', 'applicationPosts.post'],
+      })
+      .then((applications) => transformApplications(applications));
   }
 
   async deleteApplication(applicationId: number): Promise<string> {

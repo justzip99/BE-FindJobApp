@@ -3,16 +3,31 @@ import { Type } from 'class-transformer';
 import { Location } from './postLocation.dto';
 
 export class CreatePostDto {
-  @IsString() 
+  @IsString()
   job_position: string;
 
-  @ValidateNested()
-  @Type(() => Location) 
-  location?: Location;
-
-  @IsNumber() 
+  @IsNumber()
   salary: number;
 
-  @IsString() 
+  @IsString()
   description: string;
+
+  @IsString()
+  requirements: string;
+
+  @IsString()
+  qualification: string;
+
+  @IsString()
+  experience: string;
+
+  @IsString()
+  jobType: string;
+
+  @IsString()
+  specialization: string;
+
+  @ValidateNested()
+  @Type(() => Location)
+  location: Location;
 }

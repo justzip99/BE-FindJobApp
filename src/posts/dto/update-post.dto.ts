@@ -7,11 +7,6 @@ export class UpdatePostDto {
   @IsOptional()
   job_position: string;
 
-  @IsOptional()
-  @ValidateNested()
-  @Type(() => Location)
-  location?: Location;
-
   @IsNumber()
   @IsOptional()
   salary: number;
@@ -19,4 +14,29 @@ export class UpdatePostDto {
   @IsString()
   @IsOptional()
   description: string;
+
+  @IsOptional()
+  @IsString()
+  requirements: string;
+
+  @IsOptional()
+  @IsString()
+  qualification: string;
+
+  @IsOptional()
+  @IsString()
+  experience: string;
+
+  @IsOptional()
+  @IsString()
+  jobType: string;
+
+  @IsOptional()
+  @IsString()
+  specialization: string;
+
+  @IsOptional()
+  @ValidateNested()
+  @Type(() => Location)
+  location: Location;
 }

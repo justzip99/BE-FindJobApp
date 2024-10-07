@@ -18,16 +18,15 @@ export class PostsService {
     @InjectRepository(User) private userRepository: Repository<User>,
   ) {}
   async createPost(createPostDto: CreatePostDto, currentUser: User) {
-      const postCost = 500000; 
+    const postCost = 500000;
 
-      if (currentUser.balance < postCost) {
-        throw new BadRequestException('Insufficient balance to create a post');
-      }
+    if (currentUser.balance < postCost) {
+      throw new BadRequestException('Insufficient balance to create a post');
+    }
 
-      currentUser.balance -= postCost;
+    currentUser.balance -= postCost;
 
-      await this.userRepository.save(currentUser);
-
+    await this.userRepository.save(currentUser);
 
     const newPost = this.postRepository.create({
       ...createPostDto,
@@ -40,12 +39,17 @@ export class PostsService {
     return {
       id: savedPost.id,
       job_position: savedPost.job_position,
-      location: savedPost.location,
-      datePost: savedPost.datePost,
-      expDatePost: savedPost.expDatePost,
+      requirements: savedPost.requirements,
+      qualification: savedPost.qualification,
+      experience: savedPost.experience,
+      jobType: savedPost.jobType,
+      specialization: savedPost.specialization,
       description: savedPost.description,
       salary: savedPost.salary,
+      location: savedPost.location,
       userId: savedPost.user.id,
+      datePost: savedPost.datePost,
+      expDatePost: savedPost.expDatePost,
     };
   }
 
