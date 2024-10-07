@@ -92,12 +92,17 @@ export class PostsController {
       data: {
         id: renewedPost.id,
         job_position: renewedPost.job_position,
-        location: renewedPost.location,
-        datePost: renewedPost.datePost,
-        expDatePost: renewedPost.expDatePost,
+        requirements: renewedPost.requirements,
+        qualification: renewedPost.qualification,
+        experience: renewedPost.experience,
+        jobType: renewedPost.jobType,
+        specialization: renewedPost.specialization,
         description: renewedPost.description,
         salary: renewedPost.salary,
+        location: renewedPost.location,
         userId: renewedPost.user.id,
+        datePost: renewedPost.datePost,
+        expDatePost: renewedPost.expDatePost,
       },
     };
   }

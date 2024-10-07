@@ -18,6 +18,27 @@ export class Post {
   @Column({ default: '' })
   job_position: string;
 
+  @Column({ nullable: true })
+  requirements: string;
+
+  @Column({ nullable: true })
+  qualification: string;
+
+  @Column({ nullable: true })
+  experience: string;
+
+  @Column({ nullable: true })
+  jobType: string;
+
+  @Column({ nullable: true })
+  specialization: string;
+
+  @Column({ type: 'varchar', length: 1000, default: '' })
+  description: string;
+
+  @Column({ default: 0 })
+  salary: number;
+
   @Column({ type: 'json', nullable: true })
   location: {
     address: string;
@@ -36,12 +57,6 @@ export class Post {
     expDate.setDate(expDate.getDate() + 30);
     return expDate;
   }
-
-  @Column({ type: 'varchar', length: 1000, default: '' })
-  description: string;
-
-  @Column({ default: 0 })
-  salary: number;
 
   @OneToMany(() => ApplicationPost, (applicationPost) => applicationPost.post)
   applicationPosts: ApplicationPost[];
