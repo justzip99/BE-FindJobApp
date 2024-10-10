@@ -41,6 +41,11 @@ export class PostsController {
       data: posts.map((post) => ({
         id: post.id,
         job_position: post.job_position,
+        jobType: post.jobType,
+        requirements: post.requirements,
+        qualification: post.qualification,
+        experience: post.experience,
+        specialization: post.specialization,
         description: post.description,
         salary: post.salary,
         location: post.location,
@@ -64,12 +69,20 @@ export class PostsController {
       data: posts.map((post) => ({
         id: post.id,
         job_position: post.job_position,
+        jobType: post.jobType,
+        requirements: post.requirements,
+        qualification: post.qualification,
+        experience: post.experience,
+        specialization: post.specialization,
+        description: post.description,
+        salary: post.salary,
         location: post.location,
         datePost: post.datePost,
         expDatePost: post.expDatePost,
-        description: post.description,
-        salary: post.salary,
         userId: post.user.id,
+        appliedUserIds: post.applicationPosts.map(
+          (applicationPost) => applicationPost.application.userId,
+        ),
       })),
     };
   }
