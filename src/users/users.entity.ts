@@ -46,7 +46,7 @@ export class User {
   @Column({ nullable: true })
   avatarURL: string;
 
-  @Column({ type: 'decimal', precision: 10, default: 0 })
+  @Column({ type: 'int', precision: 10, default: 0 })
   balance: number;
 
   @Column({ type: 'json', nullable: true })

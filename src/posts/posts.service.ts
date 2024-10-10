@@ -39,10 +39,10 @@ export class PostsService {
     return {
       id: savedPost.id,
       job_position: savedPost.job_position,
+      jobType: savedPost.jobType,
       requirements: savedPost.requirements,
       qualification: savedPost.qualification,
       experience: savedPost.experience,
-      jobType: savedPost.jobType,
       specialization: savedPost.specialization,
       description: savedPost.description,
       salary: savedPost.salary,
@@ -62,7 +62,7 @@ export class PostsService {
   async findCurrentUserPosts(userId: number) {
     return this.postRepository.find({
       where: { user: { id: userId } },
-      relations: ['user'],
+      relations: ['user', 'applicationPosts', 'applicationPosts.application'],
     });
   }
 
