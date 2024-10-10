@@ -54,7 +54,9 @@ export class PostsService {
   }
 
   findAllPost() {
-    return this.postRepository.find({ relations: ['user'] });
+    return this.postRepository.find({
+      relations: ['user', 'applicationPosts', 'applicationPosts.application'],
+    });
   }
 
   async findCurrentUserPosts(userId: number) {

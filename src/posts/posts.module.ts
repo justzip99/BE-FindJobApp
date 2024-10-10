@@ -8,6 +8,7 @@ import { User } from '../users/users.entity';
 import { ApplicationPost } from '../application/entities/application-post.entity';
 import { JwtModule } from '@nestjs/jwt';
 import { AuthGuard } from '../guards/auth.guard';
+import { Application } from '../application/entities/application.entity';
 
 @Module({
   imports: [
