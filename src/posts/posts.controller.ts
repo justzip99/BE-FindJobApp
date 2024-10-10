@@ -41,12 +41,15 @@ export class PostsController {
       data: posts.map((post) => ({
         id: post.id,
         job_position: post.job_position,
+        description: post.description,
+        salary: post.salary,
         location: post.location,
         datePost: post.datePost,
         expDatePost: post.expDatePost,
-        description: post.description,
-        salary: post.salary,
         userId: post.user.id,
+        appliedUserIds: post.applicationPosts.map(
+          (applicationPost) => applicationPost.application.userId,
+        ),
       })),
     };
   }

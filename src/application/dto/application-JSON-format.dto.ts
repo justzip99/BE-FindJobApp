@@ -1,16 +1,16 @@
 import { Application } from "../entities/application.entity";
 
+
 export function transformApplications(
   applications: Application[],
 ): Record<string, any> {
-  const applicationJson: Record<string, any> = {};
+  const posts = [];
 
   applications.forEach((application) => {
-    applicationJson[`applicationId:${application.id}`] = {
-      userId: application.userId,
-      posts: application.applicationPosts.map((ap) => ({
-        applicationId: ap.applicationId,
-        postId: ap.postId,
+    application.applicationPosts.forEach((ap) => {
+      posts.push({
+        postId: ap.post.id,
+        applicationId: application.id,
         job_position: ap.post.job_position,
         requirements: ap.post.requirements,
         qualification: ap.post.qualification,
@@ -28,9 +28,9 @@ export function transformApplications(
         },
         datePost: ap.post.datePost,
         expDatePost: ap.post.expDatePost,
-      })),
-    };
+      });
+    });
   });
 
-  return applicationJson;
+  return { posts };
 }
