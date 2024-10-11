@@ -15,22 +15,22 @@ export class Post {
   @PrimaryGeneratedColumn()
   id: number;
 
-  @Column({ default: '' })
+  @Column({ type: 'varchar', length: 1000, default: '' })
   job_position: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 1000, nullable: true })
   requirements: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 1000, nullable: true })
   qualification: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 1000, nullable: true })
   experience: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 1000, nullable: true })
   jobType: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', length: 1000, nullable: true })
   specialization: string;
 
   @Column({ type: 'varchar', length: 1000, default: '' })

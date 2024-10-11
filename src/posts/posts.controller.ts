@@ -34,9 +34,12 @@ export class PostsController {
   }
 
   @Get('all-posts')
+  @UseGuards(AuthGuard)
   @Header('Content-Type', 'application/json')
-  async getAllPosts() {
-    const posts = await this.postsService.findAllPost();
+  async getAllPosts(@CurrentUser() currentUser: User) {
+    const posts = await this.postsService.findAllPostsExceptCurrentUser(
+      currentUser.id,
+    );
     return {
       data: posts.map((post) => ({
         id: post.id,
