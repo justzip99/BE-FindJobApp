@@ -7,7 +7,7 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, Repository } from 'typeorm';
+import { Not, Repository, Connection } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { User } from '../users/users.entity';
 
@@ -25,37 +25,50 @@ export class PostsService {
       throw new BadRequestException('Insufficient balance to create a post');
     }
 
-    currentUser.balance -= postCost;
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    await this.userRepository.save(currentUser);
+    try {
+      currentUser.balance -= postCost;
+      await queryRunner.manager.save(currentUser);
 
-    const newPost = this.postRepository.create({
-      ...createPostDto,
-      datePost: new Date(),
-      user: currentUser,
-    });
+      const newPost = this.postRepository.create({
+        ...createPostDto,
+        datePost: new Date(),
+        user: currentUser,
+      });
 
-    const savedPost = await this.postRepository.save(newPost);
+      const savedPost = await queryRunner.manager.save(newPost);
 
-    return {
-      id: savedPost.id,
-      job_position: savedPost.job_position,
-      jobType: savedPost.jobType,
-      requirements: savedPost.requirements,
-      qualification: savedPost.qualification,
-      experience: savedPost.experience,
-      specialization: savedPost.specialization,
-      description: savedPost.description,
-      salary: savedPost.salary,
-      location: savedPost.location,
-      userId: savedPost.user.id,
-      datePost: savedPost.datePost,
-      expDatePost: savedPost.expDatePost,
-    };
+      await queryRunner.commitTransaction();
+
+      return {
+        id: savedPost.id,
+        job_position: savedPost.job_position,
+        jobType: savedPost.jobType,
+        requirements: savedPost.requirements,
+        qualification: savedPost.qualification,
+        experience: savedPost.experience,
+        specialization: savedPost.specialization,
+        description: savedPost.description,
+        salary: savedPost.salary,
+        location: savedPost.location,
+        userId: savedPost.user.id,
+        datePost: savedPost.datePost,
+        expDatePost: savedPost.expDatePost,
+      };
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException('Failed to create post');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
-  findAllPost() {
+  async findAllPostsExceptCurrentUser(currentUserId: number) {
     return this.postRepository.find({
+      where: { user: { id: Not(currentUserId) } },
       relations: ['user', 'applicationPosts', 'applicationPosts.application'],
     });
   }
