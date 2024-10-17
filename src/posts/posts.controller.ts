@@ -101,8 +101,8 @@ export class PostsController {
 
   @Patch('renew-Date/:id')
   @UseGuards(AuthGuard)
-  async renewPost(@Param('id') id: number) {
-    const renewedPost = await this.postsService.renewDatePost(id);
+  async renewPost(@Param('id') id: number, @CurrentUser() currentUser: User) {
+    const renewedPost = await this.postsService.renewDatePost(id, currentUser);
 
     return {
       data: {

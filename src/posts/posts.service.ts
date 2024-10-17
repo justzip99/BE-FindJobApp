@@ -7,7 +7,7 @@ import {
 import { CreatePostDto } from './dto/create-post.dto';
 import { UpdatePostDto } from './dto/update-post.dto';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { Connection, Repository } from 'typeorm';
 import { Post } from './entities/post.entity';
 import { User } from '../users/users.entity';
 
@@ -16,6 +16,7 @@ export class PostsService {
   constructor(
     @InjectRepository(Post) private postRepository: Repository<Post>,
     @InjectRepository(User) private userRepository: Repository<User>,
+    private connection: Connection,
   ) {}
   async createPost(createPostDto: CreatePostDto, currentUser: User) {
     const postCost = 500000;
@@ -99,16 +100,39 @@ export class PostsService {
     return this.postRepository.save(updatedPost);
   }
 
-  async renewDatePost(id: number): Promise<Post> {
-    let post = await this.findPostById(id);
+  async renewDatePost(id: number, currentUser: User): Promise<Post> {
+    const postCost = 500000;
 
-    if (!post) {
-      throw new NotFoundException(`Post with ID ${id} not found`);
+    if (currentUser.balance < postCost) {
+      throw new BadRequestException('Insufficient balance to renew the post');
     }
 
-    post.datePost = new Date();
+    const queryRunner = this.connection.createQueryRunner();
+    await queryRunner.connect();
+    await queryRunner.startTransaction();
 
-    return this.postRepository.save(post);
+    try {
+      let post = await this.findPostById(id);
+
+      if (!post) {
+        throw new NotFoundException(`Post with ID ${id} not found`);
+      }
+
+      currentUser.balance -= postCost;
+      await queryRunner.manager.save(currentUser);
+
+      post.datePost = new Date();
+      const renewedPost = await queryRunner.manager.save(post);
+
+      await queryRunner.commitTransaction();
+
+      return renewedPost;
+    } catch (error) {
+      await queryRunner.rollbackTransaction();
+      throw new InternalServerErrorException('Failed to renew post');
+    } finally {
+      await queryRunner.release();
+    }
   }
 
   async delete(id: number) {
