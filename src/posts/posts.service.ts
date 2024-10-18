@@ -54,6 +54,7 @@ export class PostsService {
         description: savedPost.description,
         salary: savedPost.salary,
         location: savedPost.location,
+        social: savedPost.social,
         userId: savedPost.user.id,
         datePost: savedPost.datePost,
         expDatePost: savedPost.expDatePost,

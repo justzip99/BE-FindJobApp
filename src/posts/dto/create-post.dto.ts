@@ -1,6 +1,7 @@
 import { IsString, IsNumber, ValidateNested } from 'class-validator';
 import { Type } from 'class-transformer';
 import { Location } from './postLocation.dto';
+import { SocialLinks } from './socialLinks.dto';
 
 export class CreatePostDto {
   @IsString()
@@ -30,4 +31,8 @@ export class CreatePostDto {
   @ValidateNested()
   @Type(() => Location)
   location: Location;
+
+  @ValidateNested()
+  @Type(() => SocialLinks)
+  social: SocialLinks;
 }

@@ -19,6 +19,7 @@ import { CurrentUser } from '../users/custome_decorator/currentUser.decorator';
 import { User } from '../users/users.entity';
 import { AuthGuard } from '../guards/auth.guard';
 import { Header } from '@nestjs/common';
+import { SocialLinks } from './dto/socialLinks.dto';
 @Controller('posts')
 @UseInterceptors(ClassSerializerInterceptor)
 export class PostsController {
@@ -52,6 +53,7 @@ export class PostsController {
         description: post.description,
         salary: post.salary,
         location: post.location,
+        social: post.social,
         datePost: post.datePost,
         expDatePost: post.expDatePost,
         userId: post.user.id,
@@ -80,6 +82,7 @@ export class PostsController {
         description: post.description,
         salary: post.salary,
         location: post.location,
+        social: post.social,
         datePost: post.datePost,
         expDatePost: post.expDatePost,
         userId: post.user.id,
@@ -118,6 +121,7 @@ export class PostsController {
         specialization: renewedPost.specialization,
         description: renewedPost.description,
         salary: renewedPost.salary,
+        social: renewedPost.social,
         location: renewedPost.location,
         userId: renewedPost.user.id,
         datePost: renewedPost.datePost,
