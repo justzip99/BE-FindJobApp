@@ -48,6 +48,13 @@ export class Post {
     lng: number;
   };
 
+  @Column({ type: 'json', nullable: true })
+  social: {
+    facebook: String;
+    phoneNumber: String;
+    other: String;
+  };
+
   @CreateDateColumn()
   datePost: Date;
 
